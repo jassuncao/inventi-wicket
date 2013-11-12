@@ -73,21 +73,20 @@ public class BreadcrumbsPanel extends GenericPanel<List<DisplayedBreadcrumb>> {
         final Fragment crumbContainer;
         if (item.getParent() == breadcrumbs) {
             if (shouldBeDisabled(item)) {
-                crumbContainer = new Fragment("crumb", "singleInactive", this);
+                crumbContainer = getCrumbSingleInactive("crumb");
+                
             } else {
-                crumbContainer = new Fragment("crumb", "single", this);
+                crumbContainer = getCrumbSingle("crumb");
             }
         } else {
-            crumbContainer = new Fragment("crumb", "singleCollapsed", this);
+            crumbContainer = getCrumbSingleCollapsed("crumb");
         }
 
         if (item.getModelObject().isCollapsed()) {
-            WebMarkupContainer collapsed = new Fragment("crumb", "collapsed", this);
+            WebMarkupContainer collapsed = getCrumbCollapsed("crumb");
             IModel<List<DisplayedBreadcrumb>> collapsedCrumbs = PropertyModel.of(item.getModel(), "collapsedCrumbs");
-            collapsed.add(new ListView<DisplayedBreadcrumb>("crumbs", collapsedCrumbs) {            
-				private static final long serialVersionUID = 1L;
-
-				@Override
+            collapsed.add(new ListView<DisplayedBreadcrumb>("crumbs", collapsedCrumbs) {
+                @Override
                 protected void populateItem(ListItem<DisplayedBreadcrumb> item1) {
                     BreadcrumbsPanel.this.populateBreadcrumb(item1);
                 }
@@ -105,6 +104,22 @@ public class BreadcrumbsPanel extends GenericPanel<List<DisplayedBreadcrumb>> {
 
             item.add(crumbContainer);
         }
+    }
+    
+    protected Fragment getCrumbSingleInactive(String id){
+    	return new Fragment(id, "singleInactive", this);
+    }
+    
+    protected Fragment getCrumbSingle(String id){
+    	return new Fragment(id, "single", this);
+    }
+    
+    protected Fragment getCrumbSingleCollapsed(String id){
+    	return new Fragment(id, "singleCollapsed", this);
+    }
+    
+    protected Fragment getCrumbCollapsed(String id){
+    	return new Fragment(id, "collapsed", this);
     }
 
     protected AbstractLink customize(AbstractLink link) {
