@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BreadcrumbsOperationsHelper implements IBreadcrumbsOperations, Serializable {
+   
+	private static final long serialVersionUID = -6200055848462931499L;
 
-    private static final Logger logger = LoggerFactory.getLogger(BreadcrumbsOperationsHelper.class);
+	private static final Logger logger = LoggerFactory.getLogger(BreadcrumbsOperationsHelper.class);
 
     private final Component context;
 

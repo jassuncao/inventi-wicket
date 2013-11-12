@@ -4,8 +4,10 @@ import org.apache.wicket.model.Model;
 
 
 public class PreviousPageLink extends BreadcrumbLink {
+   
+	private static final long serialVersionUID = 6656660164600473669L;
 
-    public PreviousPageLink(String id) {
+	public PreviousPageLink(String id) {
         super(id, null);
     }
 

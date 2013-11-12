@@ -21,14 +21,18 @@ import lt.inventi.wicket.component.breadcrumb.collapse.IBreadcrumbCollapser;
 import lt.inventi.wicket.component.breadcrumb.hierarchy.IBreadcrumbHierarchy;
 
 public class BreadcrumbsPanel extends GenericPanel<List<DisplayedBreadcrumb>> {
-
-    private final ListView<DisplayedBreadcrumb> breadcrumbs;
+   
+	private static final long serialVersionUID = 1L;
+	private final ListView<DisplayedBreadcrumb> breadcrumbs;
 
     public BreadcrumbsPanel(String id) {
         super(id);
 
         add(breadcrumbs = new ListView<DisplayedBreadcrumb>("crumbs", new LoadableDetachableModel<List<DisplayedBreadcrumb>>() {
-            @Override
+         
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public List<DisplayedBreadcrumb> load() {
                 IBreadcrumbCollapser collapser = BreadcrumbsSettings.getBreadcrumbsCollapser();
                 IBreadcrumbHierarchy hierarchy = BreadcrumbsSettings.getBreadcrumbsHierarchy();
@@ -46,7 +50,10 @@ public class BreadcrumbsPanel extends GenericPanel<List<DisplayedBreadcrumb>> {
                 return result;
             }
         }) {
-            @Override
+            
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected void populateItem(ListItem<DisplayedBreadcrumb> item) {
                 BreadcrumbsPanel.this.populateBreadcrumb(item);
             }
@@ -77,8 +84,10 @@ public class BreadcrumbsPanel extends GenericPanel<List<DisplayedBreadcrumb>> {
         if (item.getModelObject().isCollapsed()) {
             WebMarkupContainer collapsed = new Fragment("crumb", "collapsed", this);
             IModel<List<DisplayedBreadcrumb>> collapsedCrumbs = PropertyModel.of(item.getModel(), "collapsedCrumbs");
-            collapsed.add(new ListView<DisplayedBreadcrumb>("crumbs", collapsedCrumbs) {
-                @Override
+            collapsed.add(new ListView<DisplayedBreadcrumb>("crumbs", collapsedCrumbs) {            
+				private static final long serialVersionUID = 1L;
+
+				@Override
                 protected void populateItem(ListItem<DisplayedBreadcrumb> item1) {
                     BreadcrumbsPanel.this.populateBreadcrumb(item1);
                 }
@@ -89,6 +98,7 @@ public class BreadcrumbsPanel extends GenericPanel<List<DisplayedBreadcrumb>> {
         } else {
             AbstractLink link = customize(createBreadcrumbLink("link", item));
             if (shouldBeDisabled(item)) {
+            	item.add(new AttributeAppender("class", "active"));
                 markAsDisabled(link);
             }
             crumbContainer.add(link.add(title));

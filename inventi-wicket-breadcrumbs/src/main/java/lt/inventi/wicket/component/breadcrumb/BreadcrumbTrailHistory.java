@@ -12,8 +12,9 @@ import org.apache.wicket.Session;
 
 
 class BreadcrumbTrailHistory implements Serializable {
-
-    private static final MetaDataKey<BreadcrumbTrailHistory> CONTAINER = new MetaDataKey<BreadcrumbTrailHistory>(){ /* empty */ };
+    
+	private static final long serialVersionUID = 8071831537136122583L;
+	private static final MetaDataKey<BreadcrumbTrailHistory> CONTAINER = new MetaDataKey<BreadcrumbTrailHistory>(){ /* empty */ };
 
     private static BreadcrumbTrailHistory get() {
         Session session = Session.get();
@@ -111,8 +112,9 @@ class BreadcrumbTrailHistory implements Serializable {
         return crumb;
     }
 
-    private static class PersistentList implements Serializable {
-        final PersistentList first;
+    private static class PersistentList implements Serializable {        
+		private static final long serialVersionUID = 587069254839862015L;
+		final PersistentList first;
         final Breadcrumb tail;
 
         PersistentList(PersistentList first, Breadcrumb tail) {

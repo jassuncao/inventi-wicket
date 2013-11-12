@@ -16,7 +16,9 @@ import org.apache.wicket.model.IModel;
  */
 class BreadcrumbLink extends Link<IBreadcrumbTargetProvider> {
 
-    BreadcrumbLink(String id, IModel<IBreadcrumbTargetProvider> model) {
+	private static final long serialVersionUID = 8898014857777697323L;
+
+	BreadcrumbLink(String id, IModel<IBreadcrumbTargetProvider> model) {
         super(id, model);
     }
 

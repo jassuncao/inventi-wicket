@@ -18,8 +18,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @param <T>
  */
 public class NonTrailingBookmarkablePageLink<T> extends BookmarkablePageLink<T> {
+   
+	private static final long serialVersionUID = 1L;
 
-    public <C extends Page> NonTrailingBookmarkablePageLink(String id, Class<C> pageClass, PageParameters parameters) {
+	public <C extends Page> NonTrailingBookmarkablePageLink(String id, Class<C> pageClass, PageParameters parameters) {
         super(id, pageClass, parameters);
     }
 
