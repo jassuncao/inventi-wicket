@@ -41,6 +41,10 @@ public final class BreadcrumbsSettings {
     static boolean isCompactionEnabled() {
         return Application.get().getMetaData(KEY).compactionEnabled;
     }
+    
+    static int historyLimit() {
+        return Application.get().getMetaData(KEY).historyLimit;
+    }
 
     private IBreadcrumbPageFilter pageFilter = new IBreadcrumbPageFilter() {
         @Override
@@ -61,6 +65,7 @@ public final class BreadcrumbsSettings {
     private IBreadcrumbCollapser collapser;
 
     private boolean compactionEnabled;
+    private int historyLimit = 32;
 
     private IComponentBreadcrumbTitleProvider localizedTitleProvider = new LocalizedTitleProvider("breadcrumb");
 
@@ -110,6 +115,18 @@ public final class BreadcrumbsSettings {
                 return type.isAssignableFrom(page.getClass());
             }
         };
+        return this;
+    }
+    
+    /**
+     * Specify a limit to the number of trails stored in the history to avoid growing 
+     * the session size indefinitely.
+     * @param newLimit
+     * 				maximum number of trails stored in history
+     * @returncurrent settings for chaining
+     */
+    public BreadcrumbsSettings withHistoryLimit(int newLimit){
+    	this.historyLimit = newLimit;
         return this;
     }
 

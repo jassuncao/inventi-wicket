@@ -1,12 +1,16 @@
 package lt.inventi.wicket.component.breadcrumb;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 
@@ -14,10 +18,11 @@ import org.apache.wicket.Session;
 class BreadcrumbTrailHistory implements Serializable {
     
 	private static final long serialVersionUID = 8071831537136122583L;
+	@SuppressWarnings("serial")
 	private static final MetaDataKey<BreadcrumbTrailHistory> CONTAINER = new MetaDataKey<BreadcrumbTrailHistory>(){ /* empty */ };
 
     private static BreadcrumbTrailHistory get() {
-        Session session = Session.get();
+        Session session = Session.get();      
         BreadcrumbTrailHistory container = session.getMetaData(CONTAINER);
         if (container == null) {
             container = new BreadcrumbTrailHistory();
@@ -93,8 +98,8 @@ class BreadcrumbTrailHistory implements Serializable {
         return get().breadcrumbMap.get(trailId).toList();
     }
 
-    private final Map<String, Breadcrumb> crumbsByPageIdClass = new HashMap<String, Breadcrumb>();
-    private final Map<String, PersistentList> breadcrumbMap = new LinkedHashMap<String, PersistentList>();
+    private final Map<String, Breadcrumb> crumbsByPageIdClass = new CrumbsHolder();
+    private final Map<String, PersistentList> breadcrumbMap = new LimitedLinkedHashMap<String, PersistentList>();
 
     /**
      * This allows us to update breadcrumb titles in the existing trails. We
@@ -138,5 +143,105 @@ class BreadcrumbTrailHistory implements Serializable {
             return result;
         }
     }
+    
+    private class LimitedLinkedHashMap<K,V> extends LinkedHashMap<K, V>{
+    	    	        	
+		private static final long serialVersionUID = -8430506851255708235L;
 
+		@Override
+    	protected boolean removeEldestEntry(java.util.Map.Entry<K, V> eldest) {
+    		return size()>BreadcrumbsSettings.historyLimit();    		
+    	}
+    }
+    
+    private class CrumbsHolder implements Map<String, Breadcrumb>, Serializable{    	
+		private static final long serialVersionUID = -6694551155283613646L;
+
+		private transient WeakHashMap<String, Breadcrumb> map = new WeakHashMap<String, Breadcrumb>();
+
+		@Override
+		public int size() {			
+			return map.size();
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return map.isEmpty();
+		}
+
+		@Override
+		public boolean containsKey(Object key) {
+			return map.containsKey(key);
+		}
+
+		@Override
+		public boolean containsValue(Object value) {			
+			return map.containsKey(value);
+		}
+
+		@Override
+		public Breadcrumb get(Object key) {
+			return map.get(key);
+		}
+
+		@Override
+		public Breadcrumb put(String key, Breadcrumb value) {
+			return map.put(key, value);
+		}
+
+		@Override
+		public Breadcrumb remove(Object key) {			
+			return map.remove(key);
+		}
+
+		@Override
+		public void putAll(Map<? extends String, ? extends Breadcrumb> m) {
+			map.putAll(m);
+		}
+
+		@Override
+		public void clear() {
+			map.clear();
+		}
+
+		@Override
+		public Set<String> keySet() {			
+			return map.keySet();
+		}
+
+		@Override
+		public Collection<Breadcrumb> values() {			
+			return map.values();
+		}
+
+		@Override
+		public Set<java.util.Map.Entry<String, Breadcrumb>> entrySet() {			
+			return map.entrySet();
+		}
+		
+		private void writeObject(java.io.ObjectOutputStream s) throws IOException
+		 {
+			s.defaultWriteObject();
+			int size = map.size();
+			s.writeInt(size);
+			Set<java.util.Map.Entry<String, Breadcrumb>> entrySet = map.entrySet();
+			if(size>0)
+			for (Entry<String, Breadcrumb> e : entrySet) {
+				s.writeObject(e.getKey());
+				s.writeObject(e.getValue());
+			}
+		 }
+				
+		private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+		{
+		        s.defaultReadObject();
+		        int size = s.readInt();
+		        map = new WeakHashMap<String, Breadcrumb>(size);		        
+		        for (int i=0; i<size; i++) {
+		        	String key = (String) s.readObject();
+		        	Breadcrumb value = (Breadcrumb) s.readObject();
+		            map.put(key, value);
+		        }
+		}
+    }
 }

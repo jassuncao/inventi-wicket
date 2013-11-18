@@ -30,6 +30,11 @@ import org.junit.Test;
 
 public class BreadcrumbsPageTest extends BreadcrumbsTests {
 
+	@Override
+	protected BreadcrumbsSettings createSettings() {		
+		return super.createSettings().withHistoryLimit(10);
+	}
+	
     @Test
     public void testStatelessBreadcrumbs(){
         BasePage page = tester
@@ -91,6 +96,20 @@ public class BreadcrumbsPageTest extends BreadcrumbsTests {
         tester.clickLink("back");
         breadcrumbList = getLastRenderedPage().getBreadcrumbs();
         assertEquals(1, breadcrumbList.size());
+    }
+    
+    @Test
+    public void testHistoryLimit(){
+        BasePage page = tester.startPage(StatelessPage.class);                
+        for(int i=0;i<99;++i){
+        	tester.clickLink("nextPage");
+        }  
+        List<Breadcrumb> breadcrumbList = getLastRenderedPage().getBreadcrumbs();
+        assertEquals(100, breadcrumbList.size());
+        for(int i=0;i<9;++i){        	
+        	tester.clickLink("back");
+        } 
+        tester.assertDisabled("back");
     }
 
 
