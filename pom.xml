@@ -6,7 +6,7 @@
     <packaging>pom</packaging>
     <name>Inventi :: Wicket :: Reusable Components</name>
 
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.4-jassuncao</version>
 
     <licenses>
         <license>
@@ -49,15 +49,21 @@
     </scm>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>http://nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>releases</id>
-            <url>http://nexus/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>giatsi_releases</id>
+			<name>GIATSI Releases Repository</name>
+			<url>http://giatsi.deetc.isel.pt/nexus/content/repositories/releases/</url>
+			<layout>default</layout>
+		</repository>
+		<snapshotRepository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>giatsi_snapshots</id>
+			<name>GIATSI Snapshots Repository</name>
+			<url>http://giatsi.deetc.isel.pt/nexus/content/repositories/snapshots/</url>
+			<layout>default</layout>
+		</snapshotRepository>
+	</distributionManagement>
 
     <build>
         <plugins>
